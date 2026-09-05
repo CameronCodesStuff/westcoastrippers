@@ -11,9 +11,9 @@
 
   function updateNavBg() {
     if (window.scrollY > 60) {
-      siteHeader.style.background = 'rgba(10, 12, 10, 0.97)';
+      siteHeader.style.background = 'rgba(2, 8, 16, 0.97)';
     } else {
-      siteHeader.style.background = 'rgba(10, 12, 10, 0.88)';
+      siteHeader.style.background = 'rgba(2, 8, 16, 0.88)';
     }
   }
 

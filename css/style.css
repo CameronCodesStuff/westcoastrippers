@@ -1,22 +1,22 @@
 /* ============================================================
    WESTCOAST RIPPERS — style.css
-   Raw. Rugged. West Coast.
+   Wave. Ocean. Deep Blue.
 ============================================================ */
 
 /* ── CSS VARIABLES ──────────────────────────────────────── */
 :root {
-  /* Palette */
-  --black:         #0A0C0A;
-  --near-black:    #111410;
-  --storm-grey:    #252922;
-  --steel:         #3A3E38;
-  --coastal-green: #1A3426;
-  --dark-green:    #0E1F17;
-  --rust:          #B85A18;
-  --rust-bright:   #D4691F;
-  --cream:         #CFC9B8;
-  --spray:         #E8E3D8;
-  --white:         #F2EEE6;
+  /* Palette — deep ocean blues */
+  --black:         #020810;
+  --near-black:    #040D1A;
+  --abyss:         #061224;
+  --deep-blue:     #0A1F3D;
+  --ocean:         #0D2E5A;
+  --mid-blue:      #1A4A7A;
+  --wave-bright:   #1E8FCA;
+  --wave-foam:     #2BBFF0;
+  --spray:         #A8D8F0;
+  --cream:         #C8DFF0;
+  --white:         #EBF4FA;
 
   /* Typography */
   --font-head:   'Barlow Condensed', 'Arial Narrow', Arial, sans-serif;
@@ -31,6 +31,45 @@
   --radius-sm:      3px;
   --transition:     0.2s ease;
   --nav-height:     68px;
+
+  /* Wave border keyframe speed */
+  --wave-speed: 3s;
+}
+
+/* ── WAVE BORDER ANIMATION ──────────────────────────────── */
+@keyframes waveBorder {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes waveShimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Wave border mixin — applied via wrapper approach */
+.wave-border {
+  position: relative;
+}
+
+.wave-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: calc(var(--radius-sm) + 2px);
+  background: linear-gradient(
+    90deg,
+    var(--wave-foam),
+    var(--mid-blue),
+    var(--wave-bright),
+    var(--wave-foam),
+    var(--ocean),
+    var(--wave-bright)
+  );
+  background-size: 300% 300%;
+  animation: waveBorder var(--wave-speed) ease infinite;
+  z-index: -1;
 }
 
 /* ── RESET & BASE ───────────────────────────────────────── */
@@ -79,7 +118,7 @@ button {
 
 /* ── FOCUS STATES ───────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid var(--rust-bright);
+  outline: 2px solid var(--wave-foam);
   outline-offset: 3px;
 }
 
@@ -103,13 +142,13 @@ button {
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.18em;
-  color: var(--rust);
+  color: var(--wave-bright);
   text-transform: uppercase;
   margin-bottom: 0.75rem;
 }
 
 .section-eyebrow.light {
-  color: var(--rust-bright);
+  color: var(--wave-foam);
 }
 
 .section-intro {
@@ -159,6 +198,8 @@ button {
   border-radius: var(--radius-sm);
   transition: background var(--transition), color var(--transition), transform 0.15s ease;
   white-space: nowrap;
+  position: relative;
+  overflow: hidden;
 }
 
 .btn:active {
@@ -166,38 +207,48 @@ button {
 }
 
 .btn-primary {
-  background: var(--rust);
-  color: var(--white);
-  border: 2px solid var(--rust);
+  background: var(--wave-bright);
+  color: var(--black);
+  border: 2px solid var(--wave-bright);
 }
 
 .btn-primary:hover,
 .btn-primary:focus-visible {
-  background: var(--rust-bright);
-  border-color: var(--rust-bright);
+  background: var(--wave-foam);
+  border-color: var(--wave-foam);
+}
+
+/* Shimmer on primary button */
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: waveShimmer 2.5s linear infinite;
 }
 
 .btn-secondary {
   background: transparent;
   color: var(--white);
-  border: 2px solid rgba(255,255,255,0.5);
+  border: 2px solid rgba(43, 191, 240, 0.4);
 }
 
 .btn-secondary:hover,
 .btn-secondary:focus-visible {
-  border-color: var(--white);
-  background: rgba(255,255,255,0.08);
+  border-color: var(--wave-foam);
+  background: rgba(43, 191, 240, 0.1);
 }
 
 .btn-outline {
   background: transparent;
   color: var(--cream);
-  border: 2px solid var(--steel);
+  border: 2px solid var(--mid-blue);
 }
 
 .btn-outline:hover,
 .btn-outline:focus-visible {
-  border-color: var(--rust);
+  border-color: var(--wave-bright);
   color: var(--white);
 }
 
@@ -208,10 +259,10 @@ button {
   left: 0;
   right: 0;
   z-index: 900;
-  background: rgba(10, 12, 10, 0.88);
+  background: rgba(2, 8, 16, 0.88);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(43, 191, 240, 0.15);
   height: var(--nav-height);
 }
 
@@ -247,7 +298,7 @@ button {
   font-weight: 700;
   font-size: 0.72rem;
   letter-spacing: 0.22em;
-  color: var(--rust);
+  color: var(--wave-bright);
   text-transform: uppercase;
 }
 
@@ -270,8 +321,9 @@ button {
 }
 
 .nav-link:hover,
-.nav-link:focus-visible {
-  color: var(--white);
+.nav-link:focus-visible,
+.nav-link--active {
+  color: var(--wave-foam);
 }
 
 .nav-cta {
@@ -279,8 +331,8 @@ button {
   font-size: 0.85rem;
   font-weight: 800;
   letter-spacing: 0.08em;
-  color: var(--white);
-  background: var(--rust);
+  color: var(--black);
+  background: var(--wave-bright);
   padding: 0.5rem 1.1rem;
   border-radius: var(--radius-sm);
   margin-left: 0.5rem;
@@ -290,7 +342,7 @@ button {
 
 .nav-cta:hover,
 .nav-cta:focus-visible {
-  background: var(--rust-bright);
+  background: var(--wave-foam);
 }
 
 .nav-toggle {
@@ -312,7 +364,6 @@ button {
   transform-origin: center;
 }
 
-/* hamburger open state */
 .nav-toggle[aria-expanded="true"] .hamburger-line:nth-child(1) {
   transform: translateY(7px) rotate(45deg);
 }
@@ -350,14 +401,33 @@ button {
 .hero-overlay {
   position: absolute;
   inset: 0;
-  /* Cinematic dark gradient from bottom, lighter at top */
   background:
     linear-gradient(
       to top,
-      rgba(10,12,10,0.92) 0%,
-      rgba(10,12,10,0.6) 45%,
-      rgba(10,12,10,0.25) 100%
+      rgba(2,8,16,0.95) 0%,
+      rgba(6,18,36,0.65) 45%,
+      rgba(2,8,16,0.3) 100%
     );
+}
+
+/* Animated wave shimmer at bottom of hero */
+.hero-overlay::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(43, 191, 240, 0.06),
+    rgba(30, 143, 202, 0.1),
+    rgba(43, 191, 240, 0.06),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: waveShimmer 4s ease infinite;
 }
 
 .hero-content {
@@ -374,7 +444,7 @@ button {
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.22em;
-  color: var(--rust-bright);
+  color: var(--wave-foam);
   text-transform: uppercase;
   margin-bottom: 1rem;
 }
@@ -397,7 +467,7 @@ button {
 .hero-title-sub {
   display: block;
   font-size: clamp(3rem, 9vw, 7.5rem);
-  color: var(--rust);
+  color: var(--wave-bright);
 }
 
 .hero-tagline {
@@ -465,7 +535,13 @@ button {
   display: block;
   width: 1px;
   height: 40px;
-  background: var(--cream);
+  background: linear-gradient(to bottom, var(--wave-foam), transparent);
+  animation: scrollPulse 2s ease infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.4; transform: scaleY(1); }
+  50%       { opacity: 1;   transform: scaleY(1.15); }
 }
 
 .scroll-label {
@@ -488,12 +564,35 @@ button {
   position: relative;
 }
 
+/* Wave border wrapper on about image */
 .about-img-frame {
   position: relative;
+  padding: 3px;
+  border-radius: calc(var(--radius-sm) + 3px);
   overflow: hidden;
-  border-radius: var(--radius-sm);
-  /* Slight clip-path for rugged feel */
   clip-path: polygon(0 0, 96% 0, 100% 4%, 100% 100%, 4% 100%, 0 96%);
+}
+
+.about-img-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    var(--wave-foam),
+    var(--mid-blue),
+    var(--wave-bright),
+    var(--ocean),
+    var(--wave-foam)
+  );
+  background-size: 300% 300%;
+  animation: waveBorder 4s ease infinite;
+  z-index: 0;
+}
+
+.about-img-frame > * {
+  position: relative;
+  z-index: 1;
 }
 
 .about-img {
@@ -502,6 +601,7 @@ button {
   object-fit: cover;
   object-position: center;
   display: block;
+  border-radius: var(--radius-sm);
 }
 
 .about-img-stamp {
@@ -513,11 +613,12 @@ button {
   font-size: 0.72rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--white);
-  background: var(--rust);
+  color: var(--black);
+  background: var(--wave-bright);
   padding: 0.4rem 0.8rem;
   line-height: 1.4;
   border-radius: var(--radius-sm);
+  z-index: 2;
 }
 
 .about-text-col {
@@ -543,17 +644,35 @@ button {
   letter-spacing: 0.14em;
   color: var(--cream);
   text-transform: uppercase;
-  border: 1px solid var(--steel);
+  border: 1px solid var(--mid-blue);
   padding: 0.5rem 1rem;
   border-radius: var(--radius-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.about-location-badge::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(43,191,240,0.08) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: waveShimmer 3s ease infinite;
 }
 
 .location-dot {
   width: 6px;
   height: 6px;
-  background: var(--rust-bright);
+  background: var(--wave-foam);
   border-radius: 50%;
   flex-shrink: 0;
+  box-shadow: 0 0 6px var(--wave-foam);
+  animation: dotPulse 2s ease infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% { box-shadow: 0 0 4px var(--wave-foam); }
+  50%       { box-shadow: 0 0 12px var(--wave-foam), 0 0 20px rgba(43,191,240,0.4); }
 }
 
 /* ── BAR CROSSINGS ──────────────────────────────────────── */
@@ -561,31 +680,88 @@ button {
   margin-bottom: clamp(2.5rem, 5vw, 4rem);
 }
 
+/* Terrain grid — wave-animated border overall */
 .terrain-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--steel);
-  border: 1px solid var(--steel);
+  background: var(--mid-blue);
   border-radius: var(--radius-sm);
   overflow: hidden;
+  position: relative;
+  padding: 2px;
+  gap: 2px;
+}
+
+/* Outer animated wave border on the grid */
+.terrain-grid::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  background: linear-gradient(
+    90deg,
+    var(--wave-foam),
+    var(--ocean),
+    var(--wave-bright),
+    var(--wave-foam),
+    var(--mid-blue),
+    var(--wave-bright)
+  );
+  background-size: 300% 100%;
+  animation: waveBorder 3s ease infinite;
+  border-radius: calc(var(--radius-sm) + 3px);
+  z-index: -1;
 }
 
 .terrain-card {
-  background: var(--storm-grey);
+  background: var(--abyss);
   padding: clamp(1.5rem, 3vw, 2.5rem);
   position: relative;
   transition: background var(--transition);
+  overflow: hidden;
+}
+
+/* Wave shimmer on hover */
+.terrain-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 60%, rgba(43,191,240,0.06) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .terrain-card:hover {
-  background: var(--coastal-green);
+  background: var(--deep-blue);
+}
+
+.terrain-card:hover::after {
+  opacity: 1;
+}
+
+/* Individual card wave border on hover */
+.terrain-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(var(--abyss), var(--abyss)) padding-box,
+    linear-gradient(90deg, var(--wave-foam), var(--mid-blue), var(--wave-bright)) border-box;
+  background-size: 100%, 300% 100%;
+  animation: waveBorder var(--wave-speed) ease infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.terrain-card:hover::before {
+  opacity: 1;
 }
 
 .terrain-card-icon {
   width: 44px;
   height: 44px;
-  color: var(--rust-bright);
+  color: var(--wave-bright);
   margin-bottom: 1.25rem;
 }
 
@@ -630,9 +806,9 @@ button {
   margin-top: 2rem;
 }
 
+/* YT card — wave border always on */
 .yt-channel-card {
-  background: var(--storm-grey);
-  border: 1px solid var(--steel);
+  background: var(--abyss);
   border-radius: var(--radius-sm);
   padding: 2.5rem;
   display: flex;
@@ -640,11 +816,48 @@ button {
   align-items: center;
   gap: 1rem;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.yt-channel-card::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(
+    90deg,
+    var(--wave-foam),
+    var(--ocean),
+    var(--wave-bright),
+    var(--mid-blue),
+    var(--wave-foam)
+  );
+  background-size: 300% 300%;
+  animation: waveBorder 4s ease infinite;
+  border-radius: calc(var(--radius-sm) + 2px);
+  z-index: 0;
+}
+
+.yt-channel-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Inner card background */
+.yt-channel-card::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: var(--abyss);
+  border-radius: var(--radius-sm);
+  z-index: 0;
 }
 
 .yt-card-logo {
   width: 72px;
   height: auto;
+  position: relative;
+  z-index: 2;
 }
 
 .yt-card-logo svg {
@@ -658,12 +871,16 @@ button {
   font-weight: 600;
   color: var(--spray);
   letter-spacing: 0.02em;
+  position: relative;
+  z-index: 2;
 }
 
 .yt-card-tagline {
   font-size: 0.82rem;
   color: var(--cream);
   opacity: 0.7;
+  position: relative;
+  z-index: 2;
 }
 
 /* ── GALLERY ────────────────────────────────────────────── */
@@ -708,7 +925,7 @@ button {
   height: 100%;
   position: relative;
   overflow: hidden;
-  background: var(--storm-grey);
+  background: var(--abyss);
   cursor: zoom-in;
 }
 
@@ -736,12 +953,27 @@ button {
 .gallery-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(10,12,10,0.45);
+  background: rgba(2,8,16,0.5);
   opacity: 0;
   transition: opacity var(--transition);
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Wave shimmer on gallery hover overlay */
+.gallery-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(43,191,240,0.12),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: waveShimmer 2s ease infinite;
 }
 
 .gallery-btn:hover .gallery-overlay,
@@ -751,8 +983,10 @@ button {
 
 .gallery-expand {
   font-size: 2rem;
-  color: var(--white);
+  color: var(--wave-foam);
   line-height: 1;
+  position: relative;
+  z-index: 2;
 }
 
 .gallery-caption {
@@ -764,7 +998,7 @@ button {
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--cream);
-  background: linear-gradient(transparent, rgba(10,12,10,0.85));
+  background: linear-gradient(transparent, rgba(2,8,16,0.88));
   letter-spacing: 0.04em;
 }
 
@@ -786,7 +1020,7 @@ button {
 .lightbox-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(5,7,5,0.94);
+  background: rgba(2,8,16,0.95);
   cursor: pointer;
 }
 
@@ -807,6 +1041,7 @@ button {
   object-fit: contain;
   border-radius: var(--radius-sm);
   display: block;
+  outline: 2px solid rgba(43, 191, 240, 0.3);
 }
 
 .lightbox-caption {
@@ -822,8 +1057,8 @@ button {
   z-index: 3;
   font-size: 1.4rem;
   color: var(--white);
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(43, 191, 240, 0.1);
+  border: 1px solid rgba(43, 191, 240, 0.3);
   width: 44px;
   height: 44px;
   display: flex;
@@ -835,7 +1070,8 @@ button {
 
 .lightbox-close:hover,
 .lightbox-close:focus-visible {
-  background: var(--rust);
+  background: var(--wave-bright);
+  color: var(--black);
 }
 
 /* ── SUPPORT ────────────────────────────────────────────── */
@@ -850,29 +1086,65 @@ button {
 .support-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--steel);
-  border: 1px solid var(--steel);
+  gap: 3px;
   border-radius: var(--radius-sm);
   overflow: hidden;
+  position: relative;
+  padding: 3px;
+  background: transparent;
+}
+
+/* Animated wave border wrapping all support cards */
+.support-grid::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  background: linear-gradient(
+    90deg,
+    var(--wave-foam),
+    var(--mid-blue),
+    var(--wave-bright),
+    var(--ocean),
+    var(--wave-foam)
+  );
+  background-size: 300% 100%;
+  animation: waveBorder 3.5s ease infinite;
+  border-radius: calc(var(--radius-sm) + 3px);
+  z-index: 0;
 }
 
 .support-card {
-  background: var(--storm-grey);
+  background: var(--abyss);
   padding: clamp(1.75rem, 3vw, 2.75rem);
   display: flex;
   flex-direction: column;
   gap: 0;
+  position: relative;
+  z-index: 1;
+  transition: background var(--transition);
+  overflow: hidden;
+}
+
+.support-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 70%, rgba(43,191,240,0.05) 100%);
+  pointer-events: none;
 }
 
 .support-card--accent {
-  background: var(--coastal-green);
+  background: var(--deep-blue);
+}
+
+.support-card:hover {
+  background: var(--deep-blue);
 }
 
 .support-card-icon {
   width: 40px;
   height: 40px;
-  color: var(--rust-bright);
+  color: var(--wave-bright);
   margin-bottom: 1.25rem;
 }
 
@@ -903,8 +1175,31 @@ button {
 /* ── FOOTER ─────────────────────────────────────────────── */
 .site-footer {
   background: var(--near-black);
-  border-top: 1px solid var(--steel);
+  border-top: 1px solid rgba(43, 191, 240, 0.2);
   padding: clamp(2.5rem, 5vw, 4rem) 0 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle wave shimmer in footer */
+.site-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--wave-bright),
+    var(--wave-foam),
+    var(--mid-blue),
+    var(--wave-bright),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: waveShimmer 4s linear infinite;
 }
 
 .footer-inner {
@@ -928,7 +1223,7 @@ button {
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.2em;
-  color: var(--rust-bright);
+  color: var(--wave-bright);
   text-transform: uppercase;
   margin-top: 0.3rem;
 }
@@ -952,12 +1247,12 @@ button {
 
 .footer-link:hover,
 .footer-link:focus-visible {
-  color: var(--rust-bright);
+  color: var(--wave-foam);
 }
 
 .footer-copy {
   font-size: 0.72rem;
-  color: var(--steel);
+  color: var(--mid-blue);
   letter-spacing: 0.06em;
 }
 
@@ -1006,12 +1301,12 @@ button {
     top: var(--nav-height);
     left: 0;
     right: 0;
-    background: rgba(10,12,10,0.97);
+    background: rgba(2, 8, 16, 0.97);
     flex-direction: column;
     align-items: stretch;
     padding: 1rem var(--gutter) 1.5rem;
     gap: 0.25rem;
-    border-bottom: 1px solid var(--steel);
+    border-bottom: 1px solid rgba(43, 191, 240, 0.15);
   }
 
   .nav-links.is-open {
@@ -1037,7 +1332,6 @@ button {
 
   .support-grid {
     grid-template-columns: 1fr;
-    gap: 1px;
   }
 
   .gallery-grid {
@@ -1064,7 +1358,6 @@ button {
 @media (max-width: 520px) {
   .terrain-grid {
     grid-template-columns: 1fr;
-    gap: 1px;
   }
 
   .hero-actions {
