@@ -1531,6 +1531,23 @@ button {
   100% { d: path("M0,60 C160,25 340,70 560,40 C740,10 960,70 1120,35 C1300,5  1420,65 1440,45 L1440,80 L0,80 Z"); }
 }
 
+/* ── CANVAS WAVE DIVIDERS ───────────────────────────────── */
+.wave-divider-wrap {
+  position: relative;
+  width: 100%;
+  line-height: 0;
+  display: block;
+  z-index: 2;
+  margin-top: -2px;
+  margin-bottom: -2px;
+}
+
+.wave-divider-canvas {
+  display: block;
+  width: 100%;
+  height: 90px;
+}
+
 /* ── PARALLAX WAVE LAYERS ───────────────────────────────── */
 .parallax-waves {
   position: absolute;

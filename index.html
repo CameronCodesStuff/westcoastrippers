@@ -131,15 +131,11 @@
     </div>
   </section>
 
-  <!-- Wave divider: dark → light -->
-  <div class="wave-divider wave-divider--d2l" aria-hidden="true">
-    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path class="wd-path wd-path--back"  d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z"/>
-      <path class="wd-path wd-path--front" d="M0,55 C180,15 360,75 540,45 C720,15 900,65 1080,40 C1260,15 1380,60 1440,50 L1440,80 L0,80 Z"/>
-    </svg>
+  <!-- Wave divider: hero-to-about -->
+  <div class="wave-divider-wrap" aria-hidden="true">
+    <canvas class="wave-divider-canvas" data-from="#020810" data-to="#040D1A" data-label="hero-to-about"></canvas>
   </div>
-
-  <!-- ============================================================
+<!-- ============================================================
        ABOUT
   ============================================================ -->
   <section class="about section" id="about" aria-labelledby="about-heading">
@@ -182,15 +178,11 @@
     </div>
   </section>
 
-  <!-- Wave divider: light → dark -->
-  <div class="wave-divider wave-divider--l2d" aria-hidden="true">
-    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path class="wd-path wd-path--back"  d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z"/>
-      <path class="wd-path wd-path--front" d="M0,55 C180,15 360,75 540,45 C720,15 900,65 1080,40 C1260,15 1380,60 1440,50 L1440,80 L0,80 Z"/>
-    </svg>
+  <!-- Wave divider: about-to-bar -->
+  <div class="wave-divider-wrap" aria-hidden="true">
+    <canvas class="wave-divider-canvas" data-from="#040D1A" data-to="#020810" data-label="about-to-bar"></canvas>
   </div>
-
-  <!-- ============================================================
+<!-- ============================================================
        BAR CROSSINGS
   ============================================================ -->
   <section class="bar-crossings section-dark" id="bar-crossings" aria-labelledby="bar-crossings-heading">
@@ -272,15 +264,11 @@
     </div>
   </section>
 
-  <!-- Wave divider: dark → light -->
-  <div class="wave-divider wave-divider--d2l" aria-hidden="true">
-    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path class="wd-path wd-path--back"  d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z"/>
-      <path class="wd-path wd-path--front" d="M0,55 C180,15 360,75 540,45 C720,15 900,65 1080,40 C1260,15 1380,60 1440,50 L1440,80 L0,80 Z"/>
-    </svg>
+  <!-- Wave divider: bar-to-videos -->
+  <div class="wave-divider-wrap" aria-hidden="true">
+    <canvas class="wave-divider-canvas" data-from="#020810" data-to="#040D1A" data-label="bar-to-videos"></canvas>
   </div>
-
-  <!-- ============================================================
+<!-- ============================================================
        VIDEOS / YOUTUBE
   ============================================================ -->
   <section class="videos section" id="videos" aria-labelledby="videos-heading">
@@ -315,9 +303,9 @@
         <div class="videos-card-col">
           <div class="yt-embed-wrap wave-border">
             <iframe
-              src="https://www.youtube.com/embed/SvKCprPOIJg?rel=0&modestbranding=1"
+              src="https://www.youtube.com/embed/SvKCprPOIJg?rel=0&modestbranding=1&autoplay=1&mute=1&loop=1&playlist=SvKCprPOIJg"
               title="Westcoast Rippers — Greymouth Bar Crossing"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowfullscreen
               loading="lazy"
             ></iframe>
@@ -327,15 +315,11 @@
     </div>
   </section>
 
-  <!-- Wave divider: light → dark -->
-  <div class="wave-divider wave-divider--l2d" aria-hidden="true">
-    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path class="wd-path wd-path--back"  d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z"/>
-      <path class="wd-path wd-path--front" d="M0,55 C180,15 360,75 540,45 C720,15 900,65 1080,40 C1260,15 1380,60 1440,50 L1440,80 L0,80 Z"/>
-    </svg>
+  <!-- Wave divider: videos-to-gallery -->
+  <div class="wave-divider-wrap" aria-hidden="true">
+    <canvas class="wave-divider-canvas" data-from="#040D1A" data-to="#020810" data-label="videos-to-gallery"></canvas>
   </div>
-
-  <!-- ============================================================
+<!-- ============================================================
        GALLERY
   ============================================================ -->
   <section class="gallery section-dark" id="gallery" aria-labelledby="gallery-heading">
@@ -411,6 +395,10 @@
     <div class="lightbox-backdrop"></div>
   </div>
 
+  <!-- Wave divider: gallery-to-support -->
+  <div class="wave-divider-wrap" aria-hidden="true">
+    <canvas class="wave-divider-canvas" data-from="#040D1A" data-to="#020810" data-label="gallery-to-support"></canvas>
+  </div>
 
   <!-- ============================================================
        SUPPORT
@@ -534,6 +522,7 @@
   </footer>
 
   <script src="js/script.js"></script>
+  <script src="js/wave-dividers.js"></script>
   <script src="js/effects.js"></script>
 </body>
 </html>
