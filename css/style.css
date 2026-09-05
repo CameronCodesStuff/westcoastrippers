@@ -1385,3 +1385,87 @@ button {
     height: 220px;
   }
 }
+
+/* ── NAV LOGO IMAGE ─────────────────────────────────────── */
+.nav-logo {
+  height: 44px;
+  width: auto;
+  display: block;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+  transition: opacity var(--transition), filter var(--transition);
+}
+
+.nav-brand:hover .nav-logo,
+.nav-brand:focus-visible .nav-logo {
+  opacity: 1;
+  filter: brightness(0) saturate(100%) invert(55%) sepia(80%) saturate(400%) hue-rotate(170deg) brightness(110%);
+}
+
+/* ── WAVE RIPPERS LETTERS ───────────────────────────────── */
+.wave-rippers {
+  display: inline-flex;
+  gap: 0.01em;
+  position: relative;
+}
+
+.wr-letter {
+  display: inline-block;
+  animation:
+    ripperWave 1.8s ease-in-out infinite,
+    ripperColor 3s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.12s), calc(var(--i) * 0.12s);
+  transform-origin: bottom center;
+  will-change: transform;
+}
+
+@keyframes ripperWave {
+  0%   { transform: translateY(0)    scaleY(1)    skewX(0deg); }
+  15%  { transform: translateY(-18px) scaleY(1.08) skewX(-4deg); }
+  30%  { transform: translateY(-6px) scaleY(0.96) skewX(2deg); }
+  45%  { transform: translateY(-22px) scaleY(1.1)  skewX(-3deg); }
+  60%  { transform: translateY(-4px) scaleY(0.98) skewX(1deg); }
+  75%  { transform: translateY(-14px) scaleY(1.05) skewX(-2deg); }
+  90%  { transform: translateY(-2px) scaleY(1)    skewX(0deg); }
+  100% { transform: translateY(0)    scaleY(1)    skewX(0deg); }
+}
+
+@keyframes ripperColor {
+  0%   { color: var(--wave-bright); text-shadow: 0 0 20px rgba(30,143,202,0.5); }
+  25%  { color: var(--wave-foam);   text-shadow: 0 0 30px rgba(43,191,240,0.8), 0 4px 12px rgba(43,191,240,0.4); }
+  50%  { color: var(--white);       text-shadow: 0 0 40px rgba(255,255,255,0.6), 0 0 80px rgba(43,191,240,0.5); }
+  75%  { color: var(--wave-foam);   text-shadow: 0 0 30px rgba(43,191,240,0.8), 0 4px 12px rgba(43,191,240,0.4); }
+  100% { color: var(--wave-bright); text-shadow: 0 0 20px rgba(30,143,202,0.5); }
+}
+
+/* Spray droplet pseudo on each letter */
+.wr-letter::before {
+  content: '·';
+  position: absolute;
+  top: -0.5em;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.3em;
+  color: var(--wave-foam);
+  opacity: 0;
+  animation: sprayDrop 1.8s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.12s + 0.15s);
+}
+
+@keyframes sprayDrop {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(0); }
+  20%  { opacity: 1; transform: translateX(-50%) translateY(-12px); }
+  50%  { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+}
+
+/* Reduced motion: keep color shift, lose the bounce */
+@media (prefers-reduced-motion: reduce) {
+  .wr-letter {
+    animation: ripperColor 3s ease-in-out infinite !important;
+    animation-delay: calc(var(--i) * 0.12s) !important;
+  }
+  .wr-letter::before {
+    display: none;
+  }
+}
