@@ -7,195 +7,26 @@
 
   /* ── PARALLAX HERO LAYERS ───────────────────────────── */
   const heroImg   = document.getElementById('heroImg');
-  const pwLayers  = document.querySelectorAll('.pw-layer');
 
   function onScroll() {
     const sy = window.scrollY;
-    // Hero image slow drift upward
     if (heroImg) {
       heroImg.style.transform = `translateY(${sy * 0.3}px)`;
     }
-    // Wave layers at different parallax speeds
-    pwLayers.forEach(function (layer, i) {
-      const speed = [0.08, 0.14, 0.22][i] || 0.1;
-      layer.style.transform = `translateX(var(--drift, 0px)) translateY(${-sy * speed}px)`;
-    });
+    // pw-layers are now CSS-animated via background-position-x — no JS transform needed
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
 
 
-  /* ── CANVAS WATER RIPPLE ON MOUSE MOVE ─────────────── */
+  /* ── RIPPLE CANVAS — removed (was O(W×H) per frame, main lag source) ── */
   const rippleCanvas = document.getElementById('rippleCanvas');
-  if (rippleCanvas) {
-    const ctx = rippleCanvas.getContext('2d');
-    let W, H, cols, rows;
-    let cur, prev;
-    const DAMP = 0.985;
-    const RADIUS = 4;
-
-    function resizeRipple() {
-      W = rippleCanvas.width  = rippleCanvas.offsetWidth;
-      H = rippleCanvas.height = rippleCanvas.offsetHeight;
-      cols = W;
-      rows = H;
-      cur  = new Float32Array(cols * rows);
-      prev = new Float32Array(cols * rows);
-    }
-
-    function dropAt(x, y, strength) {
-      x = Math.round(x); y = Math.round(y);
-      for (let dy = -RADIUS; dy <= RADIUS; dy++) {
-        for (let dx = -RADIUS; dx <= RADIUS; dx++) {
-          if (dx*dx + dy*dy <= RADIUS*RADIUS) {
-            const nx = x+dx, ny = y+dy;
-            if (nx>=0 && nx<cols && ny>=0 && ny<rows) {
-              prev[ny*cols+nx] += strength;
-            }
-          }
-        }
-      }
-    }
-
-    let lastDrop = 0;
-    function handleMouseMove(e) {
-      const now = Date.now();
-      if (now - lastDrop < 30) return;
-      lastDrop = now;
-      const rect = rippleCanvas.getBoundingClientRect();
-      dropAt(e.clientX - rect.left, e.clientY - rect.top, 280);
-    }
-
-    // Touch support
-    function handleTouch(e) {
-      const rect = rippleCanvas.getBoundingClientRect();
-      Array.from(e.changedTouches).forEach(function(t) {
-        dropAt(t.clientX - rect.left, t.clientY - rect.top, 200);
-      });
-    }
-
-    rippleCanvas.parentElement.addEventListener('mousemove', handleMouseMove);
-    rippleCanvas.parentElement.addEventListener('touchmove', handleTouch, { passive: true });
-
-    // Occasional random drops for ambient feel
-    function randomDrop() {
-      if (W && H) {
-        dropAt(
-          Math.random() * cols,
-          Math.random() * rows * 0.7,
-          120 + Math.random() * 80
-        );
-      }
-      setTimeout(randomDrop, 800 + Math.random() * 1400);
-    }
-    randomDrop();
-
-    function stepRipple() {
-      const img = ctx.createImageData(W, H);
-      const d   = img.data;
-
-      for (let y = 1; y < rows-1; y++) {
-        for (let x = 1; x < cols-1; x++) {
-          const i = y*cols + x;
-          const val = (
-            prev[i-1] + prev[i+1] +
-            prev[(y-1)*cols+x] + prev[(y+1)*cols+x]
-          ) / 2 - cur[i];
-          cur[i] = val * DAMP;
-
-          // Map wave height to blue-white shimmer pixel
-          const v = Math.max(0, Math.min(255, cur[i] + 128));
-          const pi = (y*cols + x) * 4;
-          // Only show wave crests (v>140) as bright blue/white pixels
-          if (v > 140) {
-            const intensity = ((v - 140) / 115);
-            d[pi]   = Math.round(30  + intensity * 180);  // R
-            d[pi+1] = Math.round(120 + intensity * 120);  // G
-            d[pi+2] = Math.round(200 + intensity * 55);   // B
-            d[pi+3] = Math.round(intensity * 200);        // A
-          }
-        }
-      }
-
-      ctx.putImageData(img, 0, 0);
-
-      // Swap buffers
-      const tmp = prev; prev = cur; cur = tmp;
-      requestAnimationFrame(stepRipple);
-    }
-
-    window.addEventListener('resize', resizeRipple);
-    resizeRipple();
-    stepRipple();
-  }
+  if (rippleCanvas) rippleCanvas.style.display = 'none';
 
 
-  /* ── FOAM PARTICLE SYSTEM ───────────────────────────── */
+  /* ── FOAM CANVAS — removed (replaced by CSS wave animation) ── */
   const foamCanvas = document.getElementById('foamCanvas');
-  if (foamCanvas) {
-    const fctx = foamCanvas.getContext('2d');
-    const particles = [];
-    const MAX_PARTICLES = 90;
-
-    function resizeFoam() {
-      foamCanvas.width  = foamCanvas.offsetWidth;
-      foamCanvas.height = foamCanvas.offsetHeight;
-    }
-
-    function spawnParticle() {
-      return {
-        x:     Math.random() * foamCanvas.width,
-        y:     foamCanvas.height * (0.6 + Math.random() * 0.4),
-        vx:    (Math.random() - 0.5) * 0.6,
-        vy:    -(0.4 + Math.random() * 1.2),
-        r:     1 + Math.random() * 3,
-        alpha: 0.6 + Math.random() * 0.4,
-        life:  0,
-        maxLife: 60 + Math.random() * 100,
-        wobble: Math.random() * Math.PI * 2,
-        wobbleSpeed: 0.04 + Math.random() * 0.04,
-      };
-    }
-
-    function tickFoam() {
-      fctx.clearRect(0, 0, foamCanvas.width, foamCanvas.height);
-
-      // Spawn
-      while (particles.length < MAX_PARTICLES) {
-        particles.push(spawnParticle());
-      }
-
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        p.life++;
-        p.wobble += p.wobbleSpeed;
-        p.x += p.vx + Math.sin(p.wobble) * 0.3;
-        p.y += p.vy;
-        p.vy *= 0.996; // gentle deceleration
-
-        const progress = p.life / p.maxLife;
-        const alpha = p.alpha * (1 - Math.pow(progress, 1.5));
-
-        fctx.beginPath();
-        fctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        // Colour: foam white with blue tint
-        const blue  = Math.round(180 + 75 * (1 - progress));
-        const green = Math.round(200 + 55 * (1 - progress));
-        fctx.fillStyle = `rgba(220, ${green}, ${blue}, ${alpha})`;
-        fctx.fill();
-
-        if (p.life >= p.maxLife || p.y < foamCanvas.height * 0.1) {
-          particles.splice(i, 1);
-        }
-      }
-
-      requestAnimationFrame(tickFoam);
-    }
-
-    window.addEventListener('resize', resizeFoam);
-    resizeFoam();
-    tickFoam();
-  }
+  if (foamCanvas) foamCanvas.style.display = 'none';
 
 
   /* ── LOGO CREAK EASTER EGG ──────────────────────────── */

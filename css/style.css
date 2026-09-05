@@ -1549,6 +1549,7 @@ button {
 }
 
 /* ── PARALLAX WAVE LAYERS ───────────────────────────────── */
+/* ── HERO PARALLAX WAVES (pirate-style PNG layers) ── */
 .parallax-waves {
   position: absolute;
   bottom: 0;
@@ -1563,38 +1564,40 @@ button {
 .pw-layer {
   position: absolute;
   bottom: 0;
-  left: -10%;
-  width: 120%;
+  left: 0;
+  width: 100%;
   height: 100%;
   background-repeat: repeat-x;
-  background-size: 1200px 100%;
-  will-change: transform;
+  /* auto width so 1920x520 PNGs scale to container height — no squash */
+  background-size: auto 100%;
 }
 
 .pw-layer--back {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120'%3E%3Cpath d='M0,60 C200,100 400,20 600,60 C800,100 1000,20 1200,60 L1200,120 L0,120 Z' fill='rgba(10,31,61,0.4)'/%3E%3C/svg%3E");
-  height: 60%;
-  bottom: 0;
-  animation: pwDrift 18s linear infinite;
+  height: 65%;
+  opacity: 0.5;
+  animation: pwScroll1 12s linear infinite;
 }
 
 .pw-layer--mid {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120'%3E%3Cpath d='M0,70 C150,20 350,100 600,55 C850,10 1050,90 1200,65 L1200,120 L0,120 Z' fill='rgba(26,74,122,0.35)'/%3E%3C/svg%3E");
-  height: 45%;
-  bottom: 0;
-  animation: pwDrift 12s linear infinite reverse;
+  height: 50%;
+  opacity: 0.72;
+  animation: pwScroll2 8s linear infinite;
 }
 
 .pw-layer--front {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120'%3E%3Cpath d='M0,80 C100,40 300,100 600,70 C900,40 1100,90 1200,75 L1200,120 L0,120 Z' fill='rgba(30,143,202,0.18)'/%3E%3C/svg%3E");
-  height: 30%;
-  bottom: 0;
-  animation: pwDrift 8s linear infinite;
+  height: 38%;
+  opacity: 1;
+  animation: pwScroll1 5s linear infinite;
 }
 
-@keyframes pwDrift {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+@keyframes pwScroll1 {
+  from { background-position-x: 1920px; }
+  to   { background-position-x: 0; }
+}
+
+@keyframes pwScroll2 {
+  from { background-position-x: 0; }
+  to   { background-position-x: 1920px; }
 }
 
 /* ── RIPPLE CANVAS ──────────────────────────────────────── */
