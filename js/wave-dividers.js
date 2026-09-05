@@ -1,100 +1,94 @@
 /**
  * Westcoast Rippers — wave-dividers.js
- * Canvas-drawn animated sine-wave dividers between sections.
- * Replaces broken CSS d:path() animation.
+ * Replaces canvas sine-wave dividers with the classic CSS ocean-wave animation
+ * (repeating SVG background scrolled via @keyframes wave + swell).
  */
 (function () {
   'use strict';
 
-  // Parse "#RRGGBB" → {r,g,b}
-  function hexToRgb(hex) {
-    const n = parseInt(hex.slice(1), 16);
-    return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+  var WAVE_SVG = 'https://cdn.kcak11.com/codepen_assets/wave_animation/wave.svg';
+
+  function initDivider(wrap) {
+    var fromColor = wrap.querySelector('canvas')
+      ? (wrap.querySelector('canvas').dataset.to || '#040D1A')
+      : '#040D1A';
+
+    // Remove the canvas element
+    var canvas = wrap.querySelector('canvas');
+    if (canvas) wrap.removeChild(canvas);
+
+    // Ocean container
+    var ocean = document.createElement('div');
+    ocean.className = 'kcak-ocean';
+    ocean.style.cssText = [
+      'position:relative',
+      'width:100%',
+      'height:90px',
+      'background:' + fromColor,
+      'overflow:hidden',
+      'line-height:0',
+      'margin-top:-2px',
+      'margin-bottom:-2px',
+    ].join(';');
+
+    // Back wave layer
+    var wave1 = document.createElement('div');
+    wave1.className = 'kcak-wave kcak-wave--1';
+
+    // Front wave layer (swell)
+    var wave2 = document.createElement('div');
+    wave2.className = 'kcak-wave kcak-wave--2';
+
+    ocean.appendChild(wave1);
+    ocean.appendChild(wave2);
+    wrap.appendChild(ocean);
   }
 
-  function initCanvas(canvas) {
-    const fromHex = canvas.dataset.from || '#020810';
-    const toHex   = canvas.dataset.to   || '#040D1A';
-    const from    = hexToRgb(fromHex);
-    const to      = hexToRgb(toHex);
+  // Inject the keyframe CSS once
+  function injectStyles() {
+    if (document.getElementById('kcak-wave-styles')) return;
 
-    const ctx = canvas.getContext('2d');
-    let W, H, dpr;
-    let t = Math.random() * Math.PI * 2; // random phase offset per divider
+    var style = document.createElement('style');
+    style.id = 'kcak-wave-styles';
+    style.textContent = [
+      '.kcak-wave {',
+      '  background: url(' + WAVE_SVG + ') repeat-x;',
+      '  position: absolute;',
+      '  top: -108px;',      /* scale from 198px original to fit 90px container */
+      '  width: 6400px;',
+      '  height: 108px;',
+      '  animation: kcakWave 7s cubic-bezier(0.36,0.45,0.63,0.53) infinite;',
+      '  transform: translate3d(0,0,0);',
+      '  background-size: auto 108px;',
+      '}',
+      '.kcak-wave--2 {',
+      '  top: -95px;',
+      '  animation: kcakWave 7s cubic-bezier(0.36,0.45,0.63,0.53) -0.125s infinite,',
+      '             kcakSwell 7s ease -1.25s infinite;',
+      '  opacity: 0.8;',
+      '}',
+      '@keyframes kcakWave {',
+      '  0%   { margin-left: 0; }',
+      '  100% { margin-left: -1600px; }',
+      '}',
+      '@keyframes kcakSwell {',
+      '  0%, 100% { transform: translate3d(0,-14px,0); }',
+      '  50%      { transform: translate3d(0, 3px,0); }',
+      '}',
+    ].join('\n');
 
-    function resize() {
-      dpr = window.devicePixelRatio || 1;
-      W   = canvas.offsetWidth;
-      H   = canvas.offsetHeight || 90;
-      canvas.width  = W * dpr;
-      canvas.height = H * dpr;
-      ctx.scale(dpr, dpr);
-    }
-
-    // Draw one wave layer
-    function drawWave(phase, amplitude, speed, yBase, fillR, fillG, fillB, alpha) {
-      ctx.beginPath();
-      ctx.moveTo(0, H);
-      for (let x = 0; x <= W; x += 2) {
-        const y = yBase
-          + Math.sin((x / W) * Math.PI * speed + phase) * amplitude
-          + Math.sin((x / W) * Math.PI * speed * 1.7 + phase * 0.8) * amplitude * 0.4;
-        ctx.lineTo(x, y);
-      }
-      ctx.lineTo(W, H);
-      ctx.closePath();
-      ctx.fillStyle = `rgba(${fillR},${fillG},${fillB},${alpha})`;
-      ctx.fill();
-    }
-
-    function draw() {
-      ctx.clearRect(0, 0, W, H);
-
-      // Background fill (the "from" colour)
-      ctx.fillStyle = fromHex;
-      ctx.fillRect(0, 0, W, H);
-
-      // 3 wave layers building up to the "to" colour
-      // Back wave — most transparent, highest crest
-      drawWave(t * 0.7, H * 0.28, 3, H * 0.55, to.r, to.g, to.b, 0.35);
-      // Mid wave
-      drawWave(t * 1.0 + 1.2, H * 0.22, 4, H * 0.62, to.r, to.g, to.b, 0.55);
-      // Front wave — solid, fills the bottom
-      drawWave(t * 1.4 + 2.5, H * 0.16, 5, H * 0.70, to.r, to.g, to.b, 1.0);
-
-      // Foam crest highlights on the front wave — bright blue-white lines
-      ctx.beginPath();
-      for (let x = 0; x <= W; x += 2) {
-        const y = H * 0.70
-          + Math.sin((x / W) * Math.PI * 5 + t * 1.4 + 2.5) * H * 0.16
-          + Math.sin((x / W) * Math.PI * 8.5 + t * 1.4 * 0.8) * H * 0.16 * 0.4;
-        if (x === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-      ctx.strokeStyle = 'rgba(43,191,240,0.35)';
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-
-      t += 0.012;
-    }
-
-    function tick() {
-      draw();
-      requestAnimationFrame(tick);
-    }
-
-    window.addEventListener('resize', function () {
-      resize();
-      // Re-apply scale after resize
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(dpr, dpr);
-    });
-
-    resize();
-    tick();
+    document.head.appendChild(style);
   }
 
-  // Init all wave canvases
-  document.querySelectorAll('.wave-divider-canvas').forEach(initCanvas);
+  function init() {
+    injectStyles();
+    document.querySelectorAll('.wave-divider-wrap').forEach(initDivider);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 
 })();
